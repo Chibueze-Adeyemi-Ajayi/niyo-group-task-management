@@ -14,11 +14,20 @@ export const NODE_ENV = process.env.NODE_ENV || '';
 export const JWT_SECRET = process.env.JWT_SECRET || '';
 export const JWT_EXPIRES_IN = 90;
 
-// database password
-export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || "";
-
-// database
-export const DATABASE = process.env.DATABASE || ""
-
 // version
 export const VERSION = process.env.VERSION || '1.0.0';
+
+// PG SQL
+export const PGSQL_PASSWORD = process.env.PGSQL_PASSWORD || "";
+export const PGSQL_USERNAME = process.env.PGSQL_USERNAME || "";
+export const PGSQL_HOST = process.env.PGSQL_HOST || "";
+export const PGSQL_DB = process.env.PGSQL_DB || "";
+export const PGSQL_PORT = process.env.PGSQL_PORT || "";
+
+export const BASE_URL = "/niyo-api/v1";
+
+export const EMAIL_USERNAME = process.env.EMAIL_USERNAME || ""
+export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD || ''
+export const EMAIL_HOST = process.env.EMAIL_HOST || ""
+
+export const SOCKET_PORT = process.env.SOCKET_PORT || ""

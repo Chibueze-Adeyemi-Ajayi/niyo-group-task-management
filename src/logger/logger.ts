@@ -33,7 +33,7 @@ const coloredTransport = new winston.transports.Console({
 });
 
 export const logger = winston.createLogger({
-  transports: [dailyRotateFileTransport, coloredTransport],
+  transports: [/*dailyRotateFileTransport,*/ coloredTransport],
 });
 
 // time runner cron for checking server heart-beat

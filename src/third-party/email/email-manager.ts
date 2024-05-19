@@ -1,6 +1,6 @@
 import { log } from "console";
 import { EMAIL_HOST, EMAIL_PASSWORD, EMAIL_USERNAME } from "../../config/env";
-import { MailInterface } from "./mailInterface";
+import { MailInterface } from "./email-interface";
 
 export class MailService {
 

@@ -1,14 +1,13 @@
-import mongoose from "mongoose";
-import { DEV_PORT, DATABASE, DATABASE_PASSWORD, NODE_ENV, VERSION } from "./config/env";
+import { DEV_PORT, NODE_ENV, SOCKET_PORT, VERSION } from "./config/env";
 import { logger } from "./logger/logger";
 import { log } from "console";
 import app from "./app";
 import dotenv from "dotenv";
-import { MatchTrader } from "./services/match-trader/metaService";
-import { IMatchTrader } from "./services/match-trader/metaInterface";
-import { MailService } from "./services/email/mailService";
-import { htmlWrapper } from "./utils/helpers";
-// import { MatchTrader } from "./services/match-trader/metaService";
+import sequelize from "./config/db";
+import { Socket } from "socket.io";
+import { SockerIOManager } from "./third-party/socket-io/socket-manager";
+
+const io = require('socket.io')();
 
 process.on('uncaughtException', (err) => {
     console.log('UNCAUGHT EXCEPTION! ❤️‍🔥 Shutting down...');
@@ -18,59 +17,43 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config({ path: './config/env' });
 
-const DB = DATABASE.replace('<PASSWORD>', DATABASE_PASSWORD);
- 
-mongoose
-    .connect(DB)
-    .then(() => {
-        console.log("DB connection successful")
-    })
-    .catch((err) => console.log('ERROR, ', err, {DB}))
-
 console.log(NODE_ENV);
 
 // env port
 let port = process.env.PORT || DEV_PORT;
+
+var socketManager = new SockerIOManager();
+
 const server = app.listen(port, async () => {
 
     log("+++++++++++++++++++++++++[SERVER]+++++++++++++++++++++++++++++++");
 
-    logger.info(`Korab exchange: { version: ${VERSION} }`)
+    logger.info(`Niyo Group Task Management API: { version: ${VERSION} }`)
     logger.info(`Server listening on PORT ${port}`);
 
-    // // testing match trader
-    // let matchTrader:MatchTrader = await MatchTrader.getInstance(),
-    //     // data = matchTrader.RESPONSE_DATA;
-    //     // logger.error({data});
-    //     payload:IMatchTrader = {
-    //         offerId: "",
-    //         email: "abc@mail.com",
-    //         password: "abc-password",
-    //         partnerId: "",
-    //         name: "abc user",
-    //         country: "nig",
-    //         surname: "abc",
-    //         dateOfBirth: "",
-    //         phone: "0985674839",
-    //         city: "mit",
-    //         postCode: "234",
-    //         address: "ottawa canada",
-    //         state: "ontario"
-    //     },
-    //     result = await matchTrader.create_account(payload);
-    //     // processing output result
-    //     log(result);
+    logger.warn("Attempting to connect to database")
 
-    // testing the web mail
-    // await new MailService().send({
-    //     to: "chibuezeadeyemi@gmail.com",
-    //     subject: "Email Verification",
-    //     html: htmlWrapper(`<section>
-    //         Hello Jilo, <br><br>
-    //         Your email verifcation code is <b>${12345}</b>, valid within 5 minutes <br><br>
-    //         Korab Team    //     </section>`)
-    // });
+    // database connection
+    sequelize.sync({alter:false, force:false}).then(() => {
+        logger.info("Database connection successful");
+    }).catch(err => {
+        logger.error(`Error connecting to database: ${err}`);
+    }); 
 
+    // socket IO implementation
+    logger.warn("Enabling Socket IO for real time data streaming")
+    io.on('connection', async (socket:Socket) => { 
+        logger.info("New connection"); log(socket);
+        // perform real time operation
+        socket.emit("connection", "Successfully connected !")
+        socket.on("request", (data) => {
+            logger.info("New request")
+            log({data})
+            socketManager.handleRequest(socket, data)
+        });
+    });
+    io.listen(SOCKET_PORT, () => {logger.info("Socket IO implementation successful!")});
+ 
     log("+++++++++++++++++++++++++[SERVER]+++++++++++++++++++++++++++++++");
 
 })
@@ -81,4 +64,4 @@ process.on('unhandledRejection', (err) => {
     server.close(() => {
         process.exit(1)
     });
-});
+}); 
