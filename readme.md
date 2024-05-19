@@ -24,7 +24,7 @@ This project is a backend API built with TypeScript, Express.js, and PostgreSQL 
 
    ```bash
    git clone https://github.com/Chibueze-Adeyemi-Ajayi/niyo-group-task-management.git
-   cd your-repo-name
+   cd niyo-group-task-management
    ```
 
 2. **Install dependencies:**
@@ -75,13 +75,16 @@ There are multiple ways to run the application depending on your development wor
 
 1. **Development Mode (Hot Reloading):**
 
+    DOS Machines (Windows)
+
    ```bash
    npm run start  # or yarn start
    ```
 
-   This will start the server in development mode with hot reloading enabled using Nodemon and concurrently run the TypeScript compiler to watch for changes on a DOS machines (windows). 
+   This will start the server in development mode with hot reloading enabled using Nodemon and concurrently run the TypeScript compiler to watch for changes. 
    
-   For linux use
+   Unix Machines (Linux)
+
    ```bash
    npm run start-unix  # or yarn start-unix
    ```
