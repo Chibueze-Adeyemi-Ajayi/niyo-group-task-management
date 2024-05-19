@@ -9,7 +9,7 @@
         "build": "npx tsc",
         "start-unix": "npx tsc -w & nodemon build/server.js",
         "start": "concurrently \"npx tsc -w\" \"nodemon build/server.js\"",
-        "start-prod": "node build/server.js"
+        "start-prod": "npx tsc -w & nodemon build/server.js"
     },
     "author": "jilo developer",
     "license": "ISC",
